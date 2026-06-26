@@ -1,7 +1,12 @@
 import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
+// GitHub Pages 项目站点需要子路径前缀（如 /md-viewer/），
+// 本地 dev 和自定义域名则用根路径
+const base = process.env.GITHUB_PAGES_BASE || '/'
+
 export default defineConfig({
+  base,
   plugins: [
     VitePWA({
       registerType: 'autoUpdate',
@@ -20,12 +25,12 @@ export default defineConfig({
         display: 'standalone',
         background_color: '#ffffff',
         theme_color: '#ffffff',
-        start_url: '/',
-        scope: '/',
+        start_url: base,
+        scope: base,
         icons: [
-          { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
-          { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
-          { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
+          { src: `${base}icons/icon-192.png`, sizes: '192x192', type: 'image/png' },
+          { src: `${base}icons/icon-512.png`, sizes: '512x512', type: 'image/png' },
+          { src: `${base}icons/icon-512.png`, sizes: '512x512', type: 'image/png', purpose: 'maskable' }
         ]
       },
       devOptions: { enabled: false }
