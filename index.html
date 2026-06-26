@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#ffffff" id="meta-theme-color" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <title>MD Viewer</title>
+  <!-- 防止主题闪屏：阻塞脚本先设置 class -->
+  <script>
+    (function() {
+      try {
+        var saved = localStorage.getItem('md-viewer-theme');
+        var mode = saved || 'auto';
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var isDark = mode === 'dark' || (mode === 'auto' && prefersDark);
+        if (isDark) {
+          document.documentElement.classList.add('dark');
+          document.getElementById('meta-theme-color').setAttribute('content', '#1a1a1a');
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <style>
+    /* 首屏占位样式，避免 Tailwind 加载前白屏 */
+    html, body { height: 100%; margin: 0; background: #fff; }
+    html.dark { background: #1a1a1a; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    #app { opacity: 0; transition: opacity .15s; }
+    #app.ready { opacity: 1; }
+  </style>
+</head>
+<body class="h-full">
+  <div id="app"></div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
