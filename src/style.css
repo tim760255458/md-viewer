@@ -449,3 +449,15 @@ html.dark .token.regex, html.dark .token.important, html.dark .token.variable { 
   background: #dc2626;
   border-color: #dc2626;
 }
+
+/* ============ 状态栏 ============ */
+.status-bar {
+  flex-shrink: 0;
+  padding: 6px 14px;
+  font-size: 12px;
+  color: var(--color-muted);
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  text-align: right;
+  user-select: none;
+}

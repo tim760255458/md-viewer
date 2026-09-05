@@ -9,6 +9,7 @@ import { loadDraft, addHistory, listHistory } from './storage/db.js'
 import { scheduleAutoSave, saveNow, initLastSaved } from './storage/auto-save.js'
 import { initToolbar, updateThemeButton } from './ui/toolbar.js'
 import { initHistoryPanel } from './ui/history-panel.js'
+import { initStatusBar } from './ui/statusbar.js'
 import { initFileReader } from './file/file-reader.js'
 import { downloadMarkdown, exportHtmlFile } from './export/export.js'
 import { initLayout } from './layout/layout.js'
@@ -90,7 +91,11 @@ async function main() {
     preview.update(value)
     scheduleAutoSave(value)
     scheduleHistory(value)
+    statusBar.update(value)
   })
+
+  // ---- 状态栏（字数统计）----
+  const statusBar = initStatusBar(document.querySelector('.pane-editor'))
 
   // ---- 历史面板 ----
   const historyPanel = initHistoryPanel({
