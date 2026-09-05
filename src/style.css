@@ -121,6 +121,11 @@ body {
   border-right: 1px solid var(--color-border);
 }
 .editor-host .CodeMirror-linenumber { color: var(--color-muted); }
+/* 激活行背景用 surface 色，dark 模式下不至于浅底配浅字看不清 */
+.editor-host .CodeMirror-activeline-background {
+  background: var(--color-surface);
+}
+.editor-host .CodeMirror-activeline-gutter { background: var(--color-surface); }
 .CodeMirror-cursor { border-left-color: var(--color-accent); }
 .CodeMirror-selected { background: rgba(79, 70, 229, .15); }
 .CodeMirror-line::selection,
