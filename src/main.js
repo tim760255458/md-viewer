@@ -10,6 +10,7 @@ import { scheduleAutoSave, saveNow, initLastSaved } from './storage/auto-save.js
 import { initToolbar, updateThemeButton } from './ui/toolbar.js'
 import { initHistoryPanel } from './ui/history-panel.js'
 import { initStatusBar } from './ui/statusbar.js'
+import { buildShareUrl, readShareHash, copyToClipboard } from './share/share-link.js'
 import { initFileReader } from './file/file-reader.js'
 import { downloadMarkdown, exportHtmlFile } from './export/export.js'
 import { initLayout } from './layout/layout.js'
@@ -63,6 +64,20 @@ async function main() {
     },
     onOpenFile: () => fileReader.pick(),
     onOpenHistory: () => historyPanel.open(),
+    onShareLink: async () => {
+      if (!currentContent) {
+        showToast('内容为空', 'error')
+        return
+      }
+      try {
+        const url = await buildShareUrl(currentContent)
+        await copyToClipboard(url)
+        showToast('分享链接已复制到剪贴板', 'success')
+      } catch (e) {
+        console.error('生成分享链接失败:', e)
+        showToast(e.message === '内容太长，超出分享链接上限' ? e.message : '生成分享链接失败', 'error')
+      }
+    },
     onDownloadMd: async () => {
       if (!currentContent) {
         showToast('内容为空', 'error')
@@ -160,6 +175,16 @@ async function main() {
     setValue(editor, saved)
     preview.update(saved)
     initLastSaved(saved)
+  }
+
+  // ---- 分享链接导入（优先级高于本地草稿） ----
+  const shared = await readShareHash()
+  if (shared) {
+    currentContent = shared
+    setValue(editor, shared)
+    preview.update(shared)
+    scheduleAutoSave(shared)
+    showToast('已加载分享内容，可编辑后保存为自己的', 'success')
   }
 
   // 默认在桌面端聚焦编辑器

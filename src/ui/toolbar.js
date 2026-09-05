@@ -11,6 +11,7 @@ import { showToast } from './toast.js'
  * @param {() => void} handlers.onExportHtml
  * @param {() => void} handlers.onClearEditor
  * @param {() => void} handlers.onOpenHistory
+ * @param {() => void} handlers.onShareLink
  * @param {(view: 'edit' | 'preview') => void} handlers.onToggleView
  * @param {() => string} handlers.getContent
  */
@@ -24,6 +25,7 @@ export function initToolbar(handlers) {
     <button id="btn-export-html" title="导出 HTML">📄<span class="label">导出</span></button>
     <button id="btn-clear" title="清空内容（Ctrl+Z 可撤销）">🗑<span class="label">清空</span></button>
     <button id="btn-history" title="历史记录">🕘<span class="label">历史</span></button>
+    <button id="btn-share" title="生成分享链接">🔗<span class="label">分享</span></button>
     <div class="spacer"></div>
     <button id="btn-toggle-view" title="切换编辑/预览">预览</button>
     <button id="btn-theme" title="切换主题">🌙</button>
@@ -35,6 +37,7 @@ export function initToolbar(handlers) {
   document.getElementById('btn-export-html').addEventListener('click', handlers.onExportHtml)
   document.getElementById('btn-clear').addEventListener('click', handlers.onClearEditor)
   document.getElementById('btn-history').addEventListener('click', handlers.onOpenHistory)
+  document.getElementById('btn-share').addEventListener('click', handlers.onShareLink)
   document.getElementById('btn-theme').addEventListener('click', () => {
     cycleTheme()
     updateThemeButton()
