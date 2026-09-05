@@ -9,6 +9,8 @@ import { showToast } from './toast.js'
  * @param {() => void} handlers.onOpenFile
  * @param {() => void} handlers.onDownloadMd
  * @param {() => void} handlers.onExportHtml
+ * @param {() => void} handlers.onClearEditor
+ * @param {() => void} handlers.onOpenHistory
  * @param {(view: 'edit' | 'preview') => void} handlers.onToggleView
  * @param {() => string} handlers.getContent
  */
@@ -20,6 +22,8 @@ export function initToolbar(handlers) {
     <button id="btn-open" title="打开 .md 文件">📂<span class="label">打开</span></button>
     <button id="btn-download" title="下载 .md">💾<span class="label">下载</span></button>
     <button id="btn-export-html" title="导出 HTML">📄<span class="label">导出</span></button>
+    <button id="btn-clear" title="清空内容（Ctrl+Z 可撤销）">🗑<span class="label">清空</span></button>
+    <button id="btn-history" title="历史记录">🕘<span class="label">历史</span></button>
     <div class="spacer"></div>
     <button id="btn-toggle-view" title="切换编辑/预览">预览</button>
     <button id="btn-theme" title="切换主题">🌙</button>
@@ -29,6 +33,8 @@ export function initToolbar(handlers) {
   document.getElementById('btn-open').addEventListener('click', handlers.onOpenFile)
   document.getElementById('btn-download').addEventListener('click', handlers.onDownloadMd)
   document.getElementById('btn-export-html').addEventListener('click', handlers.onExportHtml)
+  document.getElementById('btn-clear').addEventListener('click', handlers.onClearEditor)
+  document.getElementById('btn-history').addEventListener('click', handlers.onOpenHistory)
   document.getElementById('btn-theme').addEventListener('click', () => {
     cycleTheme()
     updateThemeButton()

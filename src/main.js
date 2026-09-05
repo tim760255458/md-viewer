@@ -2,12 +2,13 @@
 
 import './style.css'
 
-import { initEditor, setValue } from './editor/editor.js'
+import { initEditor, setValue, clearAll } from './editor/editor.js'
 import { initShortcuts } from './editor/shortcuts.js'
 import { initPreview } from './preview/preview.js'
-import { loadDraft } from './storage/db.js'
+import { loadDraft, addHistory, listHistory } from './storage/db.js'
 import { scheduleAutoSave, saveNow, initLastSaved } from './storage/auto-save.js'
 import { initToolbar, updateThemeButton } from './ui/toolbar.js'
+import { initHistoryPanel } from './ui/history-panel.js'
 import { initFileReader } from './file/file-reader.js'
 import { downloadMarkdown, exportHtmlFile } from './export/export.js'
 import { initLayout } from './layout/layout.js'
@@ -48,7 +49,17 @@ async function main() {
   })
 
   initToolbar({
+    onClearEditor: () => {
+      if (!currentContent) {
+        showToast('内容已经是空的', 'info')
+        editor.focus()
+        return
+      }
+      clearAll(editor)
+      showToast('已清空，Ctrl+Z 可撤销', 'success')
+    },
     onOpenFile: () => fileReader.pick(),
+    onOpenHistory: () => historyPanel.open(),
     onDownloadMd: () => {
       if (!currentContent) {
         showToast('内容为空', 'error')
@@ -74,6 +85,18 @@ async function main() {
     currentContent = value
     preview.update(value)
     scheduleAutoSave(value)
+    scheduleHistory(value)
+  })
+
+  // ---- 历史面板 ----
+  const historyPanel = initHistoryPanel({
+    onLoad: (content) => {
+      currentContent = content
+      setValue(editor, content)
+      preview.update(content)
+      scheduleAutoSave(content)
+      lastHistoryContent = content // 恢复历史不算新记录
+    }
   })
 
   // ---- 预览 ----
@@ -87,6 +110,27 @@ async function main() {
     setView: (v) => { currentView = v; layoutApi.render() }
   })
   layoutApi.render()
+
+  // ---- 历史记录（内容停止变化 3 秒后记一条快照，与最近一条去重） ----
+  let historyTimer
+  let lastHistoryContent = null
+  function scheduleHistory(content) {
+    clearTimeout(historyTimer)
+    historyTimer = setTimeout(async () => {
+      if (!content || content === lastHistoryContent) return
+      try {
+        await addHistory(content)
+        lastHistoryContent = content
+      } catch (e) {
+        console.error('历史记录失败:', e)
+      }
+    }, 3000)
+  }
+
+  // 初始化：与最近一条历史对齐，避免启动加载草稿时重复记录
+  listHistory().then((items) => {
+    if (items.length) lastHistoryContent = items[0].content
+  })
 
   // ---- 快捷键 ----
   initShortcuts({

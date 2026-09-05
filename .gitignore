@@ -35,3 +35,5 @@ yarn-error.log*
 test.md
 *.tmp
 *.bak
+.alma-snapshots
+bun.lock

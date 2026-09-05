@@ -58,3 +58,13 @@ export function setValue(cm, value) {
     try { cm.setCursor(cursor) } catch {}
   })
 }
+
+/** 清空全部内容（保留撤销历史，Ctrl+Z 可恢复），并聚焦编辑器 */
+export function clearAll(cm) {
+  cm.operation(() => {
+    const endLine = cm.lastLine()
+    cm.replaceRange('', { line: 0, ch: 0 }, { line: endLine, ch: cm.getLine(endLine).length })
+  })
+  cm.setCursor({ line: 0, ch: 0 })
+  cm.focus()
+}
