@@ -115,11 +115,12 @@ body {
   background: var(--color-bg);
   color: var(--color-fg);
 }
-.CodeMirror-gutters {
-  background: var(--color-bg);
+/* 提高权重，避免被 codemirror.css 的默认浅色 gutter 顶掉（dark 模式下会漏白） */
+.editor-host .CodeMirror-gutters {
+  background: var(--color-surface);
   border-right: 1px solid var(--color-border);
 }
-.CodeMirror-linenumber { color: var(--color-muted); }
+.editor-host .CodeMirror-linenumber { color: var(--color-muted); }
 .CodeMirror-cursor { border-left-color: var(--color-accent); }
 .CodeMirror-selected { background: rgba(79, 70, 229, .15); }
 .CodeMirror-line::selection,
