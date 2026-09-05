@@ -2,6 +2,7 @@
 
 import { listHistory, deleteHistory, clearHistory } from '../storage/db.js'
 import { showToast } from './toast.js'
+import { confirmDialog } from './confirm.js'
 
 /**
  * @param {Object} handlers
@@ -62,6 +63,7 @@ export function initHistoryPanel({ onLoad }) {
       row.addEventListener('click', load)
       row.querySelector('.h-del').addEventListener('click', async (e) => {
         e.stopPropagation()
+        if (!(await confirmDialog('删除这条历史记录？', { title: '删除历史', danger: true }))) return
         try {
           await deleteHistory(item.id)
           row.remove()
@@ -95,7 +97,7 @@ export function initHistoryPanel({ onLoad }) {
     overlay.querySelector('.h-close').addEventListener('click', close)
     overlay.addEventListener('click', (e) => { if (e.target === overlay) close() })
     overlay.querySelector('.h-clear').addEventListener('click', async () => {
-      if (!confirm('确定清空全部历史记录？此操作不可恢复。')) return
+      if (!(await confirmDialog('确定清空全部历史记录？此操作不可恢复。', { title: '清空历史', danger: true }))) return
       try {
         await clearHistory()
         close()

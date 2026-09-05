@@ -15,6 +15,7 @@ import { initLayout } from './layout/layout.js'
 import { applyTheme, watchSystemTheme } from './theme/theme.js'
 import { initUpdateNotify } from './pwa/update-notify.js'
 import { showToast } from './ui/toast.js'
+import { confirmDialog } from './ui/confirm.js'
 
 async function main() {
   // ---- 构建主结构 ----
@@ -49,30 +50,33 @@ async function main() {
   })
 
   initToolbar({
-    onClearEditor: () => {
+    onClearEditor: async () => {
       if (!currentContent) {
         showToast('内容已经是空的', 'info')
         editor.focus()
         return
       }
+      if (!(await confirmDialog('确定清空编辑器内容？清空后可按 Ctrl+Z 撤销。', { title: '清空内容', danger: true }))) return
       clearAll(editor)
       showToast('已清空，Ctrl+Z 可撤销', 'success')
     },
     onOpenFile: () => fileReader.pick(),
     onOpenHistory: () => historyPanel.open(),
-    onDownloadMd: () => {
+    onDownloadMd: async () => {
       if (!currentContent) {
         showToast('内容为空', 'error')
         return
       }
+      if (!(await confirmDialog('确定下载当前内容为 .md 文件？', { title: '下载文件' }))) return
       downloadMarkdown(currentContent)
       showToast('已下载 .md', 'success')
     },
-    onExportHtml: () => {
+    onExportHtml: async () => {
       if (!currentContent) {
         showToast('内容为空', 'error')
         return
       }
+      if (!(await confirmDialog('确定导出当前内容为 HTML 文件？', { title: '导出文件' }))) return
       exportHtmlFile(currentContent)
       showToast('已导出 HTML', 'success')
     },

@@ -393,3 +393,59 @@ html.dark .token.regex, html.dark .token.important, html.dark .token.variable { 
   color: #fff;
   border-color: #dc2626;
 }
+
+/* ============ 确认弹窗 ============ */
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 9600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.confirm-box {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  width: min(360px, 88vw);
+  padding: 20px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+}
+.confirm-title {
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+.confirm-message {
+  font-size: 14px;
+  color: var(--color-muted);
+  line-height: 1.6;
+  word-break: break-all;
+}
+.confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+.confirm-actions button {
+  padding: 7px 16px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-fg);
+  cursor: pointer;
+}
+.confirm-actions button:hover { background: var(--color-surface); }
+.confirm-actions .c-ok {
+  background: var(--color-accent);
+  color: #fff;
+  border-color: var(--color-accent);
+}
+.confirm-actions .c-ok:hover { opacity: 0.9; background: var(--color-accent); }
+.confirm-actions .c-ok.danger {
+  background: #dc2626;
+  border-color: #dc2626;
+}
